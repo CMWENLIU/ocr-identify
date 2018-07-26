@@ -31,13 +31,13 @@ def process_raw(string):
     string = string.replace('\n', '')
     return string.strip().lower()
 
-def ext_txt(imgf, languages, dic, tool):
-    dic['file'] = imgf
+def ext_txt(imgf, languages, record, tool):
+    record['file'] = imgf
     for l in languages:
         txt = tool.image_to_string(Image.open(imgf), lang=l, builder=pyocr.builders.TextBuilder())
         clean = process_raw(txt)
-        dic[l] = clean
-    return dic
+        record[l] = clean
+    return record
 
 def similarity(a, b):
     tokens_a = a.split()
