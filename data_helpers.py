@@ -31,11 +31,18 @@ def process_raw(string):
     string = string.replace('\n', '')
     return string.strip().lower()
 
-def ext_txt(img, languages, tool):
-    rlist = []
+def ext_txt(imgf, languages, dic, tool):
+    dic['file'] = imgf
     for l in languages:
-        txt = tool.image_to_string(img, lang=l, builder=pyocr.builders.TextBuilder())
-        cleaned = process_raw(txt)
-        rlist.append(cleaned)
-    return list(zip(languages, rlist))
+        txt = tool.image_to_string(Image.open(imgf), lang=l, builder=pyocr.builders.TextBuilder())
+        clean = process_raw(txt)
+        dic[l] = clean
+    return dic
+
+def similarity(a, b):
+    tokens_a = a.split()
+    tokens_b = b.split()
+    inter_len = len(list(set(tokens_a) & set(tokens_b)))
+    ratio = inter_len/min(len(tokens_a), len(tokens_b))
+    return ratio
     
