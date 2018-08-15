@@ -25,11 +25,11 @@ def clean_str(string):
     string = re.sub(r"\s{2,}", " ", string)
     return string.strip().lower()
 
-def process_raw(string):
-
-    string = re.sub(' +',' ', string)
-    string = string.replace('\n', '')
-    return string.strip().lower()
+def process_raw(string):    
+    string = re.sub(' +',' ', string) #replace all extra white spaces
+    string = string.replace('\n', ' ') #replace line break with space
+    #return string.strip().lower()
+    return string
 
 def ext_txt(imgf, languages, record, tool):
     record['file'] = imgf
