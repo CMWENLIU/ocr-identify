@@ -1,0 +1,2 @@
+average_word_counts: 41.8
+std_word_counts: 63.9
