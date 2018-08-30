@@ -25,8 +25,28 @@ def add_result(inputfile, compare):
     df.to_csv('result_statistic.csv', index=False)	
 
 
+def score_matrix(inputfile):
+	df = pd.read_csv(inputfile)
+	df = df[df['eng'].str.len() > 2]
+	df['word_counts'] = df['eng'].str.split().str.len()
+	with open('ave_std.txt', 'w') as re:
+		re.write('average_word_counts: ' + str(round(np.mean(df['word_counts'].tolist()), 1)) + '\n')
+		re.write('std_word_counts: ' + str(round(np.std(df['word_counts'].tolist()), 1)))
+	langlist = df['eng'].tolist()
+	complist = langlist
+	filelist = df['file'].tolist()
+	score_matrix = np.zeros((len(langlist), len(langlist)))
+	for i, l in enumerate(langlist):
+		for j, c in enumerate(complist):
+			score_matrix[i][j] = fuzz.partial_ratio(l, c)
+		print('Row ' + str(i+1) + '/' + str(len(langlist)) + ' has been finished!')
+	df_score = pd.DataFrame(score_matrix)
+	df_score.to_csv('score_matrix.csv', index=False)	
+
+
+
 def main():
-    add_result('result.csv', 'compare.csv')
-  
+	#add_result('result.csv', 'compare.csv')
+	score_matrix('result.csv')
 if __name__== "__main__":
     main()
