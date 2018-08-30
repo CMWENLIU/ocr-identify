@@ -43,10 +43,23 @@ def score_matrix(inputfile):
 	df_score = pd.DataFrame(score_matrix)
 	df_score.to_csv('score_matrix.csv', index=False)	
 
-
+def top_n(score_matrix, n):
+	df = pd.read_csv(score_matrix)
+	matrix = df.values
+	top_n = []
+	for i, row in enumerate(matrix):
+		res = np.argsort(row)[::-1][1:n+1].tolist()
+		res.append(round(np.average(row), 1))
+		res.append(row[res[0]])
+		res.append(np.amin(row))
+		top_n.append(res)
+		
+	topdf = pd.DataFrame(top_n)
+	topdf.to_csv('top_n.csv')
 
 def main():
 	#add_result('result.csv', 'compare.csv')
-	score_matrix('result.csv')
+	#score_matrix('result.csv')
+	top_n('score_matrix.csv', 5)
 if __name__== "__main__":
     main()
