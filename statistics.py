@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
+import os
 
 def add_result(inputfile, compare):
     df = pd.read_csv(inputfile)
@@ -93,11 +94,53 @@ def top_n_show(idx_result, m_records, result, top_n):
 			for line in ft:
 				outf.write(line)
 
+def top_5(idx_result, result):
+	df_idx = pd.read_csv(idx_result)
+	list_res = pd.read_csv(result)
+	filelist = list_res['file'].tolist()
+	classf = []
+	for index, row in df_idx.iterrows():
+		top_5 = row[:5].values.tolist()
+		head, tail = os.path.split(filelist[index])
+		count = sum(head in s for s in filelist) - 1
+		divied = min(count, 5)
+		same = 0
+		for i in top_5:
+			head_i, tail_i = os.path.split(filelist[int(i)])
+			if head_i == head:
+				same += 1
+		classf.append(round(same/divied, 1))
+	classdf = pd.DataFrame(classf)
+	cols = ['classify']
+	classdf.columns = cols
+	classdf['file'] = filelist
+	classdf.to_csv('classf.csv', index = False)
+'''	
+	for i in filelist:
+		head, tail = os.path.split(i)
+		count = sum(head in s for s in filelist)
+		total += count
+		print(head + str(count))
+	
+all_files = [] #create list for all files
+	# Load all type of available image files
 
+	ext = ['jpg', 'png','bmp', 'jpeg','JPG', 'PNG', 'BMP', 'JPEG']
+	for root, dirs, files in os.walk('images/'):
+		for i in dirs:
+			print(i)
+
+	for root, dirs, files in os.walk("images/"):
+		for file in files:
+			if file.endswith(tuple(ext)):
+				all_files.append(os.path.join(root, file))
+	print ('There are ' + str(len(all_files)) + ' images loaded')
+'''
 def main():
 	#add_result('result.csv', 'compare.csv')
 	#score_matrix('result.csv')
 	#top_n('score_matrix.csv', 5)
-	top_n_show('top_n.csv', 10, 'result.csv', 5)
+	#top_n_show('top_n.csv', 10, 'result.csv', 5)
+	top_5('top_n.csv', 'result.csv')
 if __name__== "__main__":
     main()
