@@ -80,6 +80,7 @@ def top_n_show(idx_result, m_records, result, top_n):
 		for index, row in df_idx.iterrows():
 			outf.write('<p>Top n average Score: ' + str(row['top_ave']) + '</p>' + '\n')
 			outf.write('<p>Total average Score: ' + str(row['total_ave']) + '</p>' + '\n')
+			outf.write('<p>Total average Score: ' + filelist[index] + '</p>' + '\n')
 			outf.write(imghead + list_res['file'][index] + imgtail)
 			outf.write('<p>--English:' + list_res['eng'][index] + '</p>' + '\n')
 			for i in range(top_n):	
@@ -140,7 +141,7 @@ def main():
 	#add_result('result.csv', 'compare.csv')
 	#score_matrix('result.csv')
 	#top_n('score_matrix.csv', 5)
-	#top_n_show('top_n.csv', 10, 'result.csv', 5)
-	top_5('top_n.csv', 'result.csv')
+	top_n_show('top_n.csv', 10, 'result.csv', 5)
+	#top_5('top_n.csv', 'result.csv')
 if __name__== "__main__":
     main()
